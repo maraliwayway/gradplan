@@ -4,7 +4,8 @@
 
 import * as CC from "./course-code.js"
 
-// Course lists from the Fall 2023 planner, read with sfu-planner.js.
+// Course lists from the Fall 2023 planner, read with sfu-planner.js, corrected for
+// CMPT 201 replacing CMPT 300 (see withCurrentRules).
 export const FALL_2023 = {
   "catalog": "Fall 2023",
   "source": "built-in",
@@ -13,6 +14,7 @@ export const FALL_2023 = {
       "CMPT 105W",
       "CMPT 120",
       "CMPT 125",
+      "CMPT 201",
       "CMPT 210",
       "CMPT 225",
       "CMPT 276",
@@ -121,7 +123,6 @@ export const FALL_2023 = {
     }
   ],
   "requiredBreadth": [
-    "CMPT 300",
     "CMPT 307"
   ],
   "tableThree": [
@@ -179,7 +180,21 @@ export function groupsFor(profile) {
   return groups
 }
 
-export function buildProgram(planner, profile) {
+// CMPT 300 is no longer offered. CMPT 201 replaced it as a lower division requirement,
+// so CMPT 307 is the only required breadth course. Older planner PDFs still list CMPT 300.
+export function withCurrentRules(planner) {
+  if (!planner.requiredBreadth.includes("CMPT 300")) return planner
+  return {
+    ...planner,
+    requiredBreadth: planner.requiredBreadth.filter((code) => code !== "CMPT 300"),
+    lowerDivision: { ...planner.lowerDivision, required: [...new Set([...planner.lowerDivision.required, "CMPT 201"])] }
+  }
+}
+
+const NUMBER_WORDS = ["None", "One", "Two", "Three", "Four", "Five"]
+
+export function buildProgram(sourcePlanner, profile) {
+  const planner = withCurrentRules(sourcePlanner)
   const sets = {}
   for (const column of planner.columns) sets[column.name] = column.codes
   sets["Table III"] = planner.tableThree
@@ -200,9 +215,10 @@ export function buildProgram(planner, profile) {
 
   add({ id: "breadth-required", group: "breadth", category: "Breadth", name: `Required: ${planner.requiredBreadth.join(" and ")}`, kind: "all", pool: major, match: { courses: planner.requiredBreadth } })
   const otherColumns = planner.columns.filter((c) => !c.codes.some((code) => planner.requiredBreadth.includes(code))).map((c) => c.name)
+  const moreBreadth = 5 - planner.requiredBreadth.length
   add({
-    id: "breadth-columns", group: "breadth", category: "Breadth", name: "Three more, each from a different column",
-    kind: "distinct_sets", amount: 3, pool: major, match: { sets: otherColumns },
+    id: "breadth-columns", group: "breadth", category: "Breadth", name: `${NUMBER_WORDS[moreBreadth]} more, each from a different column`,
+    kind: "distinct_sets", amount: moreBreadth, pool: major, match: { sets: otherColumns },
     notes: `Columns: ${otherColumns.join(", ")}.`
   })
 
@@ -280,7 +296,8 @@ export function tagsFor(program, code) {
   return [...(program.courseTags[CC.normalize(code)] || [])]
 }
 
-export function knownCodes(planner) {
+export function knownCodes(sourcePlanner) {
+  const planner = withCurrentRules(sourcePlanner)
   const codes = [
     ...planner.lowerDivision.required,
     ...planner.lowerDivision.choices.flat(),

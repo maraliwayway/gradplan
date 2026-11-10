@@ -46,19 +46,19 @@ A **Sign in** button appears once the keys are set. Signed-in changes save to yo
 
 ## Rules gradplan checks
 
-From the reverse side of the SFU planner:
+These are the requirements for students admitted in Fall 2023 or later, from the SFU Computing Science major planner. The Fall 2023 planner still lists CMPT 300, which is no longer offered. CMPT 201 replaced it as a lower division course, so gradplan uses the current rules below, including for uploaded planners that still list CMPT 300.
 
 | Requirement | Rule |
 | --- | --- |
-| Lower division | Every required course, plus one course from each "or" choice |
-| Breadth | CMPT 300 and CMPT 307, plus three courses from three other Table I columns |
+| Lower division | Every required course, including CMPT 201, plus one course from each "or" choice |
+| Breadth | CMPT 307, plus four courses from four other Table I columns |
 | Depth | Four 400-level Table I courses, in addition to breadth |
 | Concentration | Four courses from one Table I column, at least two at the 400 level. These can also count for breadth and depth |
 | BSc | MACM 316 plus two more courses from Tables I or III |
 | BA | One more CMPT course from Tables I or III, 30 upper division CMPT units, and 15 units in Arts and Social Sciences with 6 at the upper division |
 | Writing | CMPT 376W |
 | Upper division electives | 6 units of any 300 or 400 level course |
-| WQB | 6 units each of B-Sci, B-Soc and B-Hum |
+| WQB | 6 units each of B-Sci, B-Soc and B-Hum. MACM 101 counts for 3 of the B-Sci units and for lower division |
 | Units | 120 total, 45 upper division, 39 of those in CMPT, MACM or MATH |
 
 Breadth, depth, the credential courses, writing and electives never share a course. The list of Arts and Social Sciences subjects is in `js/sfu.js`; check it against the SFU calendar. This tool is a guide. Confirm your plan with an FAS advisor.

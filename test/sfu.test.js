@@ -22,8 +22,36 @@ test("built-in planner has the six Table I columns", () => {
     "Artificial Intelligence", "Visual and Interactive Computing", "Computing Systems",
     "Information Systems", "Programming Languages and Software", "Theoretical Computing Science"
   ])
-  assert.deepEqual(FALL_2023.requiredBreadth, ["CMPT 300", "CMPT 307"])
+  assert.deepEqual(FALL_2023.requiredBreadth, ["CMPT 307"])
+  assert.ok(FALL_2023.lowerDivision.required.includes("CMPT 201"))
   assert.deepEqual(FALL_2023.lowerDivision.choices, [["MATH 150", "MATH 151"], ["MATH 232", "MATH 240"]])
+})
+
+test("breadth is CMPT 307 plus four courses from four other columns", () => {
+  const program = buildProgram(FALL_2023, { credential: "BSc" })
+  const required = program.requirements.find((r) => r.id === "breadth-required")
+  const columns = program.requirements.find((r) => r.id === "breadth-columns")
+  assert.deepEqual(required.match.courses, ["CMPT 307"])
+  assert.equal(columns.amount, 4)
+  assert.equal(columns.match.sets.length, 5)
+})
+
+test("an uploaded planner that still lists CMPT 300 gets CMPT 201 instead", () => {
+  const old = { ...FALL_2023, requiredBreadth: ["CMPT 300", "CMPT 307"], lowerDivision: { ...FALL_2023.lowerDivision, required: FALL_2023.lowerDivision.required.filter((c) => c !== "CMPT 201") } }
+  const program = buildProgram(old, { credential: "BSc" })
+  assert.deepEqual(program.requirements.find((r) => r.id === "breadth-required").match.courses, ["CMPT 307"])
+  assert.ok(program.requirements.find((r) => r.id === "ld-core").match.courses.includes("CMPT 201"))
+  assert.equal(program.requirements.find((r) => r.id === "breadth-columns").amount, 4)
+})
+
+test("MACM 101 counts for lower division and B-Sci", () => {
+  const program = buildProgram(FALL_2023, { credential: "BSc" })
+  const plan = emptyPlan()
+  importTranscript(plan, program, "2024 Fall\nMACM 101   Discrete Math I   3.00   3.00   A   12.00   B   200")
+  const course = plan.courses[0]
+  const ids = boardFor(plan, program).report.requirementIdsFor(course.id)
+  assert.ok(ids.includes("ld-core"))
+  assert.ok(ids.includes("wqb-b-sci"))
 })
 
 test("BSc and BA have different credential rules", () => {
