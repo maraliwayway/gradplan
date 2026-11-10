@@ -1,0 +1,11 @@
+{
+  "name": "gradplan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Graduation planner for the SFU Computing Science major.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "start": "python3 -m http.server 8000"
+  }
+}
