@@ -345,7 +345,7 @@ function courseDialog(course, program) {
   const termOption = (t) => {
     const full = t.internship && db.plan.courses.some((c) => c.termId === t.id && c.id !== course.id)
     const label = `${termLabel(t)}${t.internship ? " (co-op)" : ""}`
-    return html`<option value="${t.id}"${selected(t.id, course.termId)}${full ? raw(" disabled") : ""}>${label}${full ? " — full" : ""}</option>`
+    return html`<option value="${t.id}"${selected(t.id, course.termId)}${full ? raw(" disabled") : ""}>${label}${full ? " (full)" : ""}</option>`
   }
   const otherTags = (course.tags || []).filter((t) => !WQB_TAGS.includes(t))
   return html`

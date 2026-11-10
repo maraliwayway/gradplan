@@ -7,7 +7,7 @@ It runs entirely in the browser. PDFs are read on your device and never uploaded
 ## Tech stack
 
 - **Vanilla JavaScript** (ES modules), no framework and no build step
-- **HTML and CSS** — a single hand-written stylesheet, responsive down to mobile
+- **HTML and CSS**, with a single hand-written stylesheet that works down to phone width
 - **[pdf.js](https://mozilla.github.io/pdf.js/)** from a CDN, loaded only when you open a PDF, to read planners and transcripts on-device
 - **localStorage** for saving your plan, with JSON backup and restore
 - **[Supabase](https://supabase.com/)** (optional) for email sign-in and cross-device sync; off until you add keys
